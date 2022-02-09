@@ -18,7 +18,6 @@ characters <- c("Gabe","Sits","To","My","Right")
 integers <- c(1,2,3,4,5)
 sports <- factor(c("basketball","football","basketball","football"))
 
-
 # read weather data 
 datW <- read.csv("Z:/students/jslater/Data/noaa_weather/2011124.csv")
 
@@ -27,6 +26,9 @@ datW$dateF <- as.Date(datW$DATE, "%Y-%m-%d")
 
 # Add year
 datW$year <- as.numeric(format(datW$dateF,"%Y"))
+
+# Make places a factor
+datW$NAME<- as.factor(datW$NAME)
 
 # Unique site names
 unique(datW$NAME)
@@ -54,7 +56,7 @@ par(mfrow=c(2,2))
 # Aberdeen Histogram
 h1 <- hist(datW$TAVE[datW$NAME == "ABERDEEN, WA US"],
         freq=FALSE, 
-        main = paste(levels(datW$NAME)["ABERDEEN, WA US"]),
+        main = paste(levels(datW$NAME)[1]),
         xlab = "Average daily temperature (degrees C)", 
         ylab="Relative frequency",
         col="grey50",
@@ -101,7 +103,7 @@ points(x.plot,
 # Morrisville Histogram
 h2 <- hist(datW$TAVE[datW$NAME == "MORRISVILLE 6 SW, NY US"],
         freq=FALSE, 
-        main = paste(levels(datW$NAME)["MORRISVILLE 6 SW, NY US"]),
+        main = paste(levels(datW$NAME)[2]),
         xlab = "Average daily temperature (degrees C)", 
         ylab="Relative frequency",
         col="purple",
@@ -126,7 +128,7 @@ abline(v = mean(datW$TAVE[datW$NAME == "MORRISVILLE 6 SW, NY US"],na.rm=TRUE) + 
 # Livermore Histogram
 h3 <- hist(datW$TAVE[datW$NAME == "LIVERMORE, CA US"],
         freq=FALSE, 
-        main = paste(levels(datW$NAME)["LIVERMORE, CA US"]),
+        main = paste(levels(datW$NAME)[3]),
         xlab = "Average daily temperature (degrees C)", 
         ylab="Relative frequency",
         col="blue",
@@ -152,7 +154,7 @@ abline(v = mean(datW$TAVE[datW$NAME == "LIVERMORE, CA US"],na.rm=TRUE) + sd(datW
 # Mormon Flat Histogram
 h4 <- hist(datW$TAVE[datW$NAME == "MORMON FLAT, AZ US"],
         freq=FALSE, 
-        main = paste(levels(datW$NAME)["MORMON FLAT, AZ US"]),
+        main = paste(levels(datW$NAME)[4]),
         xlab = "Average daily temperature (degrees C)", 
         ylab="Relative frequency",
         col="green",
