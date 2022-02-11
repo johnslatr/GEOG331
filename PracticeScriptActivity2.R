@@ -12,7 +12,7 @@ heights_cm <- heights*100
 # Set up a matrix 
 Mat <- matrix(c(1,2,3,4,5,5),ncol=2,byrow=TRUE)
 
-#Question 2 example vectors 
+# Question 2 example vectors 
 numeric <- c(31.0,41.555,1.222,88.88,0.00001)
 characters <- c("Gabe","Sits","To","My","Right")
 integers <- c(1,2,3,4,5)
@@ -36,10 +36,10 @@ unique(datW$NAME)
 # Mean max temp in Celcius for Aberdeen ignoring NA values
 mean(datW$TMAX[datW$NAME == "ABERDEEN, WA US"], na.rm=TRUE)
 
-#  calculate average
+# calculate average temp
 datW$TAVE <- datW$TMIN + ((datW$TMAX-datW$TMIN)/2)
 
-#get the mean across all sites
+#get the mean temp across all sites
 averageTemp <- aggregate(datW$TAVE, by=list(datW$NAME), FUN="mean",na.rm=TRUE)
 averageTemp
 
@@ -53,7 +53,7 @@ datW$siteN <- as.numeric(datW$NAME)
 # put all graphs together 
 par(mfrow=c(2,2))
 
-# Aberdeen Histogram
+# Aberdeen Histogram - Temp 
 h1 <- hist(datW$TAVE[datW$NAME == "ABERDEEN, WA US"],
         freq=FALSE, 
         main = paste(levels(datW$NAME)[1]),
@@ -100,7 +100,7 @@ points(x.plot,
        lwd = 4, 
        lty = 2)
 
-# Morrisville Histogram
+# Morrisville Histogram - Temp
 h2 <- hist(datW$TAVE[datW$NAME == "MORRISVILLE 6 SW, NY US"],
         freq=FALSE, 
         main = paste(levels(datW$NAME)[2]),
@@ -125,7 +125,7 @@ abline(v = mean(datW$TAVE[datW$NAME == "MORRISVILLE 6 SW, NY US"],na.rm=TRUE) + 
        lty = 3,
        lwd = 3)
 
-# Livermore Histogram
+# Livermore Histogram - Temp
 h3 <- hist(datW$TAVE[datW$NAME == "LIVERMORE, CA US"],
         freq=FALSE, 
         main = paste(levels(datW$NAME)[3]),
@@ -151,7 +151,7 @@ abline(v = mean(datW$TAVE[datW$NAME == "LIVERMORE, CA US"],na.rm=TRUE) + sd(datW
        lwd = 3)
 
 
-# Mormon Flat Histogram
+# Mormon Flat Histogram - Temp
 h4 <- hist(datW$TAVE[datW$NAME == "MORMON FLAT, AZ US"],
         freq=FALSE, 
         main = paste(levels(datW$NAME)[4]),
@@ -176,3 +176,58 @@ abline(v = mean(datW$TAVE[datW$NAME == "MORMON FLAT, AZ US"],na.rm=TRUE) + sd(da
        lty = 3,
        lwd = 3)
 
+# calculate the probability of below freezing temps at Aberdeen
+pnorm(0,
+      mean(datW$TAVE[datW$siteN == 1],na.rm=TRUE),
+      sd(datW$TAVE[datW$siteN == 1],na.rm=TRUE))
+
+# like above, all under 5
+pnorm(5,
+      mean(datW$TAVE[datW$siteN == 1],na.rm=TRUE),
+      sd(datW$TAVE[datW$siteN == 1],na.rm=TRUE))
+ 
+# Using the above 2, find the prob between 5 and 0 using subtraction within pnorm
+pnorm(5,
+      mean(datW$TAVE[datW$siteN == 1],na.rm=TRUE),
+      sd(datW$TAVE[datW$siteN == 1],na.rm=TRUE))- pnorm(0,
+      mean(datW$TAVE[datW$siteN == 1],na.rm=TRUE),
+      sd(datW$TAVE[datW$siteN == 1],na.rm=TRUE))
+
+# finding all above 20 by subtracting by 1
+1 - pnorm(20,
+          mean(datW$TAVE[datW$siteN == 1],na.rm=TRUE),
+          sd(datW$TAVE[datW$siteN == 1],na.rm=TRUE))
+
+# Return the value (still Aberdeen) along the distribution using qnorm
+qnorm(0.95,
+      mean(datW$TAVE[datW$siteN == 1],na.rm=TRUE),
+      sd(datW$TAVE[datW$siteN == 1],na.rm=TRUE))
+
+# Question 6 - increase the mean by 4
+1 - pnorm(20,
+          mean(datW$TAVE[datW$siteN == 1]+4,na.rm=TRUE),
+          sd(datW$TAVE[datW$siteN == 1],na.rm=TRUE))
+
+# Question 7: Aberdeen Histogram - Precipitation 
+h5 <- hist(datW$PRCP[datW$NAME == "ABERDEEN, WA US"],
+           freq=FALSE, 
+           main = paste(levels(datW$NAME)[1]),
+           xlab = "Daily Precipitation (mm)", 
+           ylab="Relative frequency",
+           col="grey50",
+           border="white")
+
+# Question 8 
+yearlyPrecip<- aggregate(datW$PRCP, by = list(datW$year, datW$NAME), FUN="sum", na.rm=TRUE)
+
+#Create 8's Histogram for Aberdeen
+h6 <- hist(yearlyPrecip$x[yearlyPrecip$Group.2 == "ABERDEEN, WA US"],
+           freq=FALSE, 
+           main = paste(levels(datW$NAME)[1]),
+           xlab = "Yearly Precipitation (mm)", 
+           ylab="Relative frequency",
+           col="grey50",
+           border="white")
+
+# Question 9 - calculate average precipitation
+averageYearlyPrecip <- aggregate(datW$TAVE, by=list(datW$NAME), FUN="mean",na.rm=TRUE)
