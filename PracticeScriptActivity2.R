@@ -230,4 +230,8 @@ h6 <- hist(yearlyPrecip$x[yearlyPrecip$Group.2 == "ABERDEEN, WA US"],
            border="white")
 
 # Question 9 - calculate average precipitation
-averageYearlyPrecip <- aggregate(datW$TAVE, by=list(datW$NAME), FUN="mean",na.rm=TRUE)
+# <- aggregate(datW$TAVE, by=list(datW$NAME), FUN="mean",na.rm=TRUE)
+
+place <- as.numeric(yearlyPrecip$Group.2)
+averageYearlyPrecip <- aggregate(yearlyPrecip, by=list(place), FUN="mean", na.rm=TRUE)
+averageYearlyPrecip
