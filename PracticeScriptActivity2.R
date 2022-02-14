@@ -233,5 +233,5 @@ h6 <- hist(yearlyPrecip$x[yearlyPrecip$Group.2 == "ABERDEEN, WA US"],
 # <- aggregate(datW$TAVE, by=list(datW$NAME), FUN="mean",na.rm=TRUE)
 
 place <- as.numeric(yearlyPrecip$Group.2)
-averageYearlyPrecip <- aggregate(yearlyPrecip, by=list(place), FUN="mean", na.rm=TRUE)
+averageYearlyPrecip <- aggregate(yearlyPrecip$x, by=list(yearlyPrecip$Group.2), FUN="mean", na.rm=TRUE)
 averageYearlyPrecip
