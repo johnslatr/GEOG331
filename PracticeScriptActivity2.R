@@ -1,4 +1,6 @@
-#Activity 2 Practice 
+#Activity 2 
+
+### Practice ###
 
 # set working directory to noaa folder 
 setwd("Z:/students/jslater/Data/noaa_weather/")
@@ -12,7 +14,8 @@ heights_cm <- heights*100
 # Set up a matrix 
 Mat <- matrix(c(1,2,3,4,5,5),ncol=2,byrow=TRUE)
 
-# Question 2 example vectors 
+##################
+### Question 2 ### - Example Vecotrs 
 numeric <- c(31.0,41.555,1.222,88.88,0.00001)
 characters <- c("Gabe","Sits","To","My","Right")
 integers <- c(1,2,3,4,5)
@@ -52,6 +55,9 @@ datW$siteN <- as.numeric(datW$NAME)
 
 # put all graphs together 
 par(mfrow=c(2,2))
+
+##################
+### Question 4 ###
 
 # Aberdeen Histogram - Temp 
 h1 <- hist(datW$TAVE[datW$NAME == "ABERDEEN, WA US"],
@@ -203,12 +209,14 @@ qnorm(0.95,
       mean(datW$TAVE[datW$siteN == 1],na.rm=TRUE),
       sd(datW$TAVE[datW$siteN == 1],na.rm=TRUE))
 
-# Question 6 - increase the mean by 4
+##################
+### Question 6 ### - increase the mean by 4
 1 - pnorm(20,
           mean(datW$TAVE[datW$siteN == 1]+4,na.rm=TRUE),
           sd(datW$TAVE[datW$siteN == 1],na.rm=TRUE))
 
-# Question 7: Aberdeen Histogram - Precipitation 
+##################
+### Question 7 ### : Aberdeen Histogram - Precipitation 
 h5 <- hist(datW$PRCP[datW$NAME == "ABERDEEN, WA US"],
            freq=FALSE, 
            main = paste(levels(datW$NAME)[1]),
@@ -217,7 +225,8 @@ h5 <- hist(datW$PRCP[datW$NAME == "ABERDEEN, WA US"],
            col="grey50",
            border="white")
 
-# Question 8 
+##################
+### Question 8 ###
 yearlyPrecip<- aggregate(datW$PRCP, by = list(datW$year, datW$NAME), FUN="sum", na.rm=TRUE)
 
 #Create 8's Histogram for Aberdeen
@@ -229,9 +238,8 @@ h6 <- hist(yearlyPrecip$x[yearlyPrecip$Group.2 == "ABERDEEN, WA US"],
            col="grey50",
            border="white")
 
-# Question 9 - calculate average precipitation
-# <- aggregate(datW$TAVE, by=list(datW$NAME), FUN="mean",na.rm=TRUE)
+##################
+### Question 9 ### - calculate average precipitation
 
-place <- as.numeric(yearlyPrecip$Group.2)
 averageYearlyPrecip <- aggregate(yearlyPrecip$x, by=list(yearlyPrecip$Group.2), FUN="mean", na.rm=TRUE)
 averageYearlyPrecip
