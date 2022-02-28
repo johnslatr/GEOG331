@@ -146,8 +146,20 @@ lines(datW$DD[datW$wind.speedQ1 > 0], datW$wind.speedQ1[datW$wind.speedQ1 > 0],
       col= rgb(200/255,30/255,100/255,.5), pch=15)
 
 ### Question 7 ###
-datW$soil.tempQ1 <- 
+# plot 4 graphs together- air temp, precip, soil temp, soil moisture
+par(mfrow= c(2,2))
 
-datW$soil.moistureQ1 <-
+plot(datW$DD, datW$air.temperature, xlab = "Day of Year", ylab = "Air Temperature (C)", xlim = c(163,192))
+
+plot(datW$DD, datW$precipitation, xlab = "Day of Year", ylab = "Precipitation (mm)", xlim = c(163,192))
+
+plot(datW$DD, datW$soil.temp, xlab = "Day of Year", ylab = "Soil Temperature (C)", xlim = c(163,192))
+
+plot(datW$DD, datW$soil.moisture, xlab = "Day of Year", ylab = "Soil Mositure", xlim = c(163,192))
 
 ### Question 8 ###
+
+observationsChart <- data.frame("Total Precipitation" = round(sum(datW$precipitation)), na.rm = TRUE, digits = 3)
+
+observationsChart$ <-
+observationsChart
