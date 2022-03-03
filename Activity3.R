@@ -23,6 +23,8 @@ b <- c(8,4,5)
 assert(length(a) == length(b), "error: unequal length")
 
 ###### Exercise Begins ######
+par(mfrow= c(1,1))
+
 # Read in data 
 datW <- read.csv("Z:/students/jslater/Data/bewkes/bewkes_weather.csv", na.strings=c("#N/A"), skip=3, header=FALSE)
 
@@ -99,8 +101,7 @@ datW[datW$air.tempQ1 > 33,]
 
 #plot precipitation and lightning strikes on the same plot
 #normalize lighting strikes to match precipitation
-lightscale <- (max(datW$precipitation)/max(datW$lightning.acvitivy))
-* datW$lightning.acvitivy
+lightscale <- (max(datW$precipitation)/max(datW$lightning.acvitivy))* datW$lightning.acvitivy
 
 #make the plot with precipitation and lightning activity marked
 #make it empty to start and add in features
@@ -134,8 +135,15 @@ datW$air.tempQ2 <-  ifelse(datW$precipitation  >= 2 & datW$lightning.acvitivy >0
 datW$wind.speedQ1 <- ifelse(datW$precipitation  >= 2 & datW$lightning.acvitivy >0, NA,
                             ifelse(datW$precipitation > 5, NA, datW$wind.speed))
 
-# Assert statement to check if ....
+# Assert statement to check if the lengths of the two new vectors are the same
 assert(length(datW$wind.speedQ1) == length(datW$air.tempQ2), "error = Unequal lengths")
+
+naVec5 <- is.na(datW$wind.speed[datW$precipitation > 5])
+naVec2 <- is.na(datW$wind.speed[datW$precipitation  >= 2 & datW$lightning.acvitivy >0])
+
+for(i in naVec2){
+  assert()
+}
 
 # Plot the new corrected wind speed variable 
 plot(datW$DD, datW$wind.speedQ1, xlab = "Day of Year", ylab = "Wind Speed (m/s)",
@@ -144,22 +152,29 @@ points(datW$DD[datW$wind.speedQ1 > 0], datW$wind.speedQ1[datW$wind.speedQ1 > 0],
        col= rgb(95/255,158/255,160/255,.5), pch=15)
 lines(datW$DD[datW$wind.speedQ1 > 0], datW$wind.speedQ1[datW$wind.speedQ1 > 0],
       col= rgb(200/255,30/255,100/255,.5), pch=15)
-
+  
 ### Question 7 ###
 # plot 4 graphs together- air temp, precip, soil temp, soil moisture
 par(mfrow= c(2,2))
 
 plot(datW$DD, datW$air.temperature, xlab = "Day of Year", ylab = "Air Temperature (C)", xlim = c(163,192))
-
 plot(datW$DD, datW$precipitation, xlab = "Day of Year", ylab = "Precipitation (mm)", xlim = c(163,192))
-
 plot(datW$DD, datW$soil.temp, xlab = "Day of Year", ylab = "Soil Temperature (C)", xlim = c(163,192))
-
 plot(datW$DD, datW$soil.moisture, xlab = "Day of Year", ylab = "Soil Mositure", xlim = c(163,192))
 
 ### Question 8 ###
+# Create a data frame that will hold the numbers we want
+observationsChart <- data.frame("Total Precipitation" = round(sum(datW$precipitation, na.rm = TRUE), digits = 3))
 
-observationsChart <- data.frame("Total Precipitation" = round(sum(datW$precipitation)), na.rm = TRUE, digits = 3)
-
-observationsChart$ <-
-observationsChart
+# Add other columns 1 by 1 to the data frame
+observationsChart$avgTemp <- data.frame("Avg. Temp" = round(mean(datW$air.temperature, na.rm = TRUE), digits = 1))
+observationsChart$avgWindSpeed <- data.frame("Avg. Wind Speed" = round(mean(datW$wind.speed, na.rm = TRUE), digits = 2))
+observationsChart$avgSoilMoisture <- data.frame("Avg. Soil Moisture" = round(mean(datW$soil.moisture, na.rm = TRUE), digits = 3))
+observationsChart$avgSoilTemp <- data.frame("Avg. Soil Temperature" = round(mean(datW$soil.temp, na.rm = TRUE), digits = 1))
+  
+### Question 9 ###
+# Plot the 4 same graphs as 7 but remove the x limits  
+plot(datW$DD, datW$air.temperature, xlab = "Day of Year", ylab = "Air Temperature (C)")
+plot(datW$DD, datW$precipitation, xlab = "Day of Year", ylab = "Precipitation (mm)")
+plot(datW$DD, datW$soil.temp, xlab = "Day of Year", ylab = "Soil Temperature (C)")
+plot(datW$DD, datW$soil.moisture, xlab = "Day of Year", ylab = "Soil Mositure")
