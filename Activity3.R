@@ -7,7 +7,6 @@ assert <- function(statement,err.message){
   if(statement == FALSE){
     print(err.message)
   }
-  
 }
 
 #check how the statement works
@@ -43,13 +42,10 @@ colnames(datW) <-   colnames(sensorInfo)
 #preview data
 print(datW[1,])
 
-#use install.packages to install lubridate
-#install.packages(c("lubridate"))
-
+#open up the lubridate library
 library(lubridate)
 
-#convert to standardized format
-#date format is m/d/y
+#convert to standardized format, m/d/y
 dates <- mdy_hm(datW$timestamp, tz= "America/New_York")
 
 #calculate day of year
@@ -58,8 +54,6 @@ datW$doy <- yday(dates)
 datW$hour <- hour(dates) + (minute(dates)/60)
 #calculate decimal day of year
 datW$DD <- datW$doy + (datW$hour/24)
-#quick preview of new date calcualtions
-datW[1,]
 
 #see how many values have missing data for each sensor observation
 #air temperature
@@ -78,26 +72,15 @@ length(which(is.na(datW$soil.moisture)))
 length(which(is.na(datW$soil.temp)))
 
 #make a plot with filled in points (using pch) for soil moisture
-#line lines
 plot(datW$DD, datW$soil.moisture, pch=19, type="b", xlab = "Day of Year",
      ylab="Soil moisture (cm3 water per cm3 soil)")
 
 #make a plot with filled in points (using pch) for air 
-#line lines
 plot(datW$DD, datW$air.temperature, pch=19, type="b", xlab = "Day of Year",
      ylab="Air temperature (degrees C)")
 
-#I'm going to make a new column to work with that indicates that I am conducting QAQC
+#Make a new column to work with that indicates that I am conducting QAQC
 datW$air.tempQ1 <- ifelse(datW$air.temperature < 0, NA, datW$air.temperature)
-
-# Show quantiles of air temperature
-quantile(datW$air.tempQ1)
-
-#look at days with really low air temperature
-datW[datW$air.tempQ1 < 8,]
-
-#look at days with really high air temperature
-datW[datW$air.tempQ1 > 33,]  
 
 #plot precipitation and lightning strikes on the same plot
 #normalize lighting strikes to match precipitation
@@ -119,8 +102,6 @@ points(datW$DD[lightscale > 0], lightscale[lightscale > 0],
 
 ### Question 5 ###
 # Prove we can use lightscale by saying lightscale has the same dates
-assert(!is.null(datW$DD[lightscale>0]), "error = not part of subset")
-
 assert(length(lightscale) == length(datW$precipitation), "error: Does not contain components because they're unequal lengths")
 
 ### Question 6 ###
@@ -138,11 +119,17 @@ datW$wind.speedQ1 <- ifelse(datW$precipitation  >= 2 & datW$lightning.acvitivy >
 # Assert statement to check if the lengths of the two new vectors are the same
 assert(length(datW$wind.speedQ1) == length(datW$air.tempQ2), "error = Unequal lengths")
 
-naVec5 <- is.na(datW$wind.speed[datW$precipitation > 5])
-naVec2 <- is.na(datW$wind.speed[datW$precipitation  >= 2 & datW$lightning.acvitivy >0])
+#Create two vectors based on above values with TRUE and FALSE in them 
+naVec5 <- is.na(datW$wind.speedQ1[datW$precipitation > 5])
+naVec2 <- is.na(datW$wind.speedQ1[datW$precipitation  >= 2 & datW$lightning.acvitivy >0])
 
+#Check if all values in the vectors are TRUE
 for(i in naVec2){
-  assert()
+  assert(i == TRUE, "Not true")
+}
+
+for(i in naVec5){
+  assert(i == TRUE, "Not true")
 }
 
 # Plot the new corrected wind speed variable 
