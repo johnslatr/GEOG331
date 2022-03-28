@@ -54,7 +54,7 @@ datP$decYear <- ifelse(leap_year(datP$year),datP$year + (datP$decDay/366),
 #plot discharge
 plot(datD$decYear, datD$discharge, type="l", xlab="Year", ylab=expression(paste("Discharge ft"^"3 ","sec"^"-1")))
 
-#basic formatting
+#basic formatting - define avg discharge and SD 
 aveF <- aggregate(datD$discharge, by=list(datD$doy), FUN="mean")
 colnames(aveF) <- c("doy","dailyAve")
 sdF <- aggregate(datD$discharge, by=list(datD$doy), FUN="sd")
@@ -65,26 +65,33 @@ dev.new(width=8,height=8)
 
 #bigger margins
 par(mai=c(1,1,1,1))
-#make plot
-plot(aveF$doy,aveF$dailyAve, 
-     type="l", 
-     xlab="Year", 
-     ylab=expression(paste("Discharge ft"^"3 ","sec"^"-1")),
-     lwd=2)
-
-#bigger margins
-par(mai=c(1,1,1,1))
-#make plot
+#make plot of day of year vs avg discharge
 plot(aveF$doy,aveF$dailyAve, 
      type="l", 
      xlab="Year", 
      ylab=expression(paste("Discharge ft"^"3 ","sec"^"-1")),
      lwd=2,
      ylim=c(0,90),
-     xaxs="i", yaxs ="i")#remove gaps from axes  
-#show standard deviation around the mean
+     xaxs="i", yaxs ="i",#remove gaps from axes
+     axes=FALSE)#no axes
+#### Question 5 ####
+lines(datD$discharge[datD$year == 2017],
+      col= rgb(200/255,30/255,100/255,.5), pch=15)
+# add polygons to show the data within 1 SD of the average plot
 polygon(c(aveF$doy, rev(aveF$doy)),#x coordinates
         c(aveF$dailyAve-sdF$dailySD,rev(aveF$dailyAve+sdF$dailySD)),#ycoord
         col=rgb(0.392, 0.584, 0.929,.2), #color that is semi-transparent
         border=NA#no border
-)
+)       
+# adjust the axis display - set interval and set ticks
+axis(1, seq(15,345, by=30), #tick intervals
+     lab=seq(15,345, by=30)) #tick labels
+axis(2, seq(0,80, by=20),
+     seq(0,80, by=20),
+     las = 2)#show ticks at 90 degree angle
+# add a legend to the plot 
+legend("topright", c("mean","1 standard deviation"), #legend items
+       lwd=c(2,NA),#lines
+       col=c("black",rgb(0.392, 0.584, 0.929,.2)),#colors
+       pch=c(NA,15),#symbols
+       bty="n")#no legend border
