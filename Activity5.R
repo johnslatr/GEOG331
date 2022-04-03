@@ -61,8 +61,6 @@ sdF <- aggregate(datD$discharge, by=list(datD$doy), FUN="sd")
 colnames(sdF) <- c("doy","dailySD")
 
 #start new plot
-dev.new(width=8,height=8)
-
 #bigger margins
 par(mai=c(1,1,1,1))
 #make plot of day of year vs avg discharge
@@ -94,4 +92,96 @@ legend("topright", c("mean","1 standard deviation"), #legend items
        lwd=c(2,NA),#lines
        col=c("black",rgb(0.392, 0.584, 0.929,.2)),#colors
        pch=c(NA,15),#symbols
-       bty="n")#no legend border
+       bty="n") #no legend border
+
+#### Question 7 ####
+# count every day's measurements 
+precip <- aggregate(datP$hour, by = list(datP$year, datP$doy), FUN = "length")
+
+# to add to the plot, add a decimal day variable to data frame
+precip$decYear <- ifelse(leap_year(precip$Group.1), precip$Group.1 + (precip$Group.2/366),
+                         precip$Group.1 + (precip$Group.2/365))
+# use dplyr to filter days with 24 measurements 
+library(dplyr)
+precipFullMeasure <- filter(precip, x == 24, .preserve = FALSE)
+
+#plot discharge
+plot(datD$decYear, datD$discharge, type="l", xlab="Year", ylab=expression(paste("Discharge ft"^"3 ","sec"^"-1")), ylim = c(15,425))
+
+# use a for loop to add indicators of 24 hr measurement days 
+for (i in precipFullMeasure){
+  abline(v=i, col = rgb(200/255,30/255,100/255,.3) )
+}
+# add a legend for our plot
+legend("topright", c("24hr day"), #legend items
+       lwd=c(1,NA),#lines
+       col=c(rgb(200/255,30/255,100/255,.3)),#colors
+       pch=c(NA,15),#symbols
+       bty="n") #no legend border
+
+#subsest discharge and precipitation within range of interest
+hydroD <- datD[datD$doy >= 248 & datD$doy < 250 & datD$year == 2011,]
+hydroP <- datP[datP$doy >= 248 & datP$doy < 250 & datP$year == 2011,]
+
+#get minimum and maximum range of discharge to plot
+#go outside of the range so that it's easy to see high/low values
+#floor rounds down the integer
+yl <- floor(min(hydroD$discharge))-1
+#ceiling rounds up to the integer
+yh <- ceiling(max(hydroD$discharge))+1
+#minimum and maximum range of precipitation to plot
+pl <- 0
+pm <-  ceiling(max(hydroP$HPCP))+.5
+#scale precipitation to fit on the 
+hydroP$pscale <- (((yh-yl)/(pm-pl)) * hydroP$HPCP) + yl
+
+par(mai=c(1,1,1,1))
+#make plot of discharge
+plot(hydroD$decDay,
+     hydroD$discharge, 
+     type="l", 
+     ylim=c(yl,yh), 
+     lwd=2,
+     xlab="Day of year", 
+     ylab=expression(paste("Discharge ft"^"3 ","sec"^"-1")))
+#add bars to indicate precipitation 
+for(i in 1:nrow(hydroP)){
+  polygon(c(hydroP$decDay[i]-0.017,hydroP$decDay[i]-0.017,
+            hydroP$decDay[i]+0.017,hydroP$decDay[i]+0.017),
+          c(yl,hydroP$pscale[i],hydroP$pscale[i],yl),
+          col=rgb(0.392, 0.584, 0.929,.2), border=NA)
+}
+
+#### Question 8 ####
+#subsest discharge and precipitation within range of interest
+hydroDq8 <- datD[datD$doy >= 3 & datD$doy < 5 & datD$year == 2012,]
+hydroPq8 <- datP[datP$doy >= 3 & datP$doy < 5 & datP$year == 2012,]
+
+#get minimum and maximum range of discharge to plot
+#go outside of the range so that it's easy to see high/low values
+#floor rounds down the integer
+ylq8 <- floor(min(hydroDq8$discharge))-1
+#ceiling rounds up to the integer
+yhq8 <- ceiling(max(hydroDq8$discharge))+1
+#minimum and maximum range of precipitation to plot
+plq8 <- 0
+pmq8 <-  ceiling(max(hydroPq8$HPCP))+.5
+#scale precipitation to fit on the 
+hydroPq8$pscale <- (((yhq8-ylq8)/(pmq8-plq8)) * hydroPq8$HPCP) + ylq8
+
+par(mai=c(1,1,1,1))
+#make plot of discharge
+plot(hydroDq8$decDay,
+     hydroDq8$discharge, 
+     type="l", 
+     ylim=c(ylq8,yhq8), 
+     lwd=2,
+     xlab="Day of year", 
+     ylab=expression(paste("Discharge ft"^"3 ","sec"^"-1")))
+#add bars to indicate precipitation 
+for(i in 1:nrow(hydroPq8)){
+  polygon(c(hydroPq8$decDay[i]-0.017,hydroPq8$decDay[i]-0.017,
+            hydroPq8$decDay[i]+0.017,hydroPq8$decDay[i]+0.017),
+          c(ylq8,hydroPq8$pscale[i],hydroPq8$pscale[i],ylq8),
+          col=rgb(0.392, 0.584, 0.929), border=NA)
+}
