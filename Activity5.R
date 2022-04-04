@@ -185,3 +185,48 @@ for(i in 1:nrow(hydroPq8)){
           c(ylq8,hydroPq8$pscale[i],hydroPq8$pscale[i],ylq8),
           col=rgb(0.392, 0.584, 0.929), border=NA)
 }
+
+# use ggplot
+library(ggplot2)
+#specify year as a factor
+datD$yearPlot <- as.factor(datD$year)
+#make a boxplot
+ggplot(data= datD, aes(yearPlot,discharge)) + 
+  geom_boxplot()
+
+#make a violin plot
+ggplot(data= datD, aes(yearPlot,discharge)) + 
+  geom_violin()
+
+#### Question 9 ####
+# create a data frame with the desired data only from 2016
+datD2016 <- data.frame(datD$doy[datD$year == 2016], 
+                       datD$discharge[datD$year == 2016])
+
+#edit the column names 
+colnames(datD2016) <- c('doy', 'discharge')
+
+#use multiple ifelse statements to define the seasons based on the day of year 
+datD2016$season <- ifelse((datD2016$doy < 80), "winter",
+                    ifelse((datD2016$doy < 170), "spring",
+                    ifelse((datD2016$doy < 260), "summer",
+                    ifelse((datD2016$doy < 330), "fall", "winter"))))
+
+#make a violin plot using the seasonal data 
+ggplot(data= datD2016, aes(season,discharge)) + 
+  geom_violin() + labs(title = "2016 Stream Flow Violin Plot")
+
+# repeat the process above for 2017
+datD2017 <- data.frame(datD$doy[datD$year == 2017], 
+                       datD$discharge[datD$year == 2017])
+
+colnames(datD2017) <- c('doy', 'discharge')
+
+datD2017$season <- ifelse((datD2017$doy < 80), "winter",
+                    ifelse((datD2017$doy < 170), "spring",
+                      ifelse((datD2017$doy < 260), "summer",
+                        ifelse((datD2017$doy < 330), "fall", "winter"))))
+
+#make a violin plot
+ggplot(data= datD2017, aes(season,discharge)) + 
+  geom_violin() + labs(title = "2017 Stream Flow Violin Plot")
