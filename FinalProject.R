@@ -46,35 +46,9 @@ unzip(zipfile, files = NULL, list = FALSE, overwrite = TRUE,
 
 tdata <- read.csv("Z:/students/jslater/Data/NEON_temp-air-triple/NEON.D03.DSNY.DP1.00003.001.2017-01.basic.20220120T173946Z.RELEASE-2022/NEON.D03.DSNY.DP1.00003.001.000.040.030.TAAT_30min.2017-01.basic.20211210T223026Z.csv")
 
+library(lubridate)
 
-plot(tdata$startDateTime ~ tdata$tempTripleMean, 
+#convert dates to usable format using strptime, specifying each part
+
+plot(tdata$startDateTim ~ tdata$tempTripleMean, 
      type="p", pch=".", xlab="Date", ylab="Temperature", ylim = c(-20,40))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# list.files will list everything in working directory, recursive = true, simple pattern matching, fullpath = true gives full path
-# for loop to unzip all files, list all hdf5 files, write another loop to read NSAE variables and length of it 
-
-# Unzip .gz file
-gunzip(fileUrl)
-
-# read in data
-h5readAttributes(file = fileURL,
-                 name = "DSNY/dp01/data")
