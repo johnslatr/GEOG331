@@ -1,7 +1,7 @@
 # install -- Only do once!
 #install.packages('R.utils')
-install.packages("BiocManager")
-install.packages("neonUtilities")
+#install.packages("BiocManager")
+#install.packages("neonUtilities")
 
 # Libraries
 library(data.table)
@@ -28,27 +28,20 @@ flux2 <- stackEddy(filepath = fileUrl2,
                    level = "dp04")
 
 # Plot Graph
-p <- plot(flux2$DSNY$data.fluxCo2.nsae.flux ~ flux$DSNY$timeBgn, 
+p <- plot(flux2$DSNY$data.fluxCo2.nsae.flux ~ flux2$DSNY$timeBgn, 
      type="l", pch=".", xlab="Time", ylab="CO2 flux")
 
-integrate(p)
+
 
 plot(flux2$DSNY$data.fluxCo2.stor.flux ~ flux2$DSNY$timeBgn,
      type="l", pch=".", xlab="Time", ylab="CO2 Storage")
-
-
-# Unzip files 
-unzip(zipfile, files = NULL, list = FALSE, overwrite = TRUE,
-      junkpaths = FALSE, exdir = ".", unzip = "internal",
-      setTimes = FALSE)
-
-# Read in temperature files
 
 tdata <- read.csv("Z:/students/jslater/Data/NEON_temp-air-triple/NEON.D03.DSNY.DP1.00003.001.2017-01.basic.20220120T173946Z.RELEASE-2022/NEON.D03.DSNY.DP1.00003.001.000.040.030.TAAT_30min.2017-01.basic.20211210T223026Z.csv")
 
 library(lubridate)
 
 #convert dates to usable format using strptime, specifying each part
+strptime(tdata$startDateTime, "%y-%m-%dT%H:%M:%SZ", tz= "EST")
 
 plot(tdata$startDateTim ~ tdata$tempTripleMean, 
      type="p", pch=".", xlab="Date", ylab="Temperature", ylim = c(-20,40))
